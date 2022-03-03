@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.*;
 import java.io.FileWriter;
 import java.util.stream.Collectors;
+import java.nio.file.Paths;
 
 import org.jacoco.core.analysis.Analyzer;
 import org.jacoco.core.analysis.CoverageBuilder;
@@ -43,7 +44,7 @@ import org.jacoco.core.analysis.IMethodCoverage;
 public class ReportGenerator {
 
 	private final String title;
-
+    private String destinationDirectory;
 	private final File executionDataFile;
 	private final File classesDirectory;
 	private final File sourceDirectory;
@@ -57,6 +58,9 @@ public class ReportGenerator {
 	 * @param projectDirectory
 	 */
 	public ReportGenerator(final File projectDirectory) {
+        System.out.println( projectDirectory );
+        //Paths path = Paths.get(projectDirectory).
+        this.destinationDirectory = projectDirectory.getAbsolutePath();
 		this.title = projectDirectory.getName();
 		this.executionDataFile = new File(projectDirectory, "jacoco.exec");
 		this.classesDirectory = new File(projectDirectory, "classes");
@@ -88,7 +92,7 @@ public class ReportGenerator {
 		myReport(bundleCoverage);
 	}
 
-	void myReport(final IBundleCoverage bundleCoverage) throws IOException {
+	public void myReport(final IBundleCoverage bundleCoverage) throws IOException {
 		Collection<IPackageCoverage> packageCollection = bundleCoverage
 				.getPackages();
 		List<String> resultList = new ArrayList<String>();
@@ -102,79 +106,30 @@ public class ReportGenerator {
 					.getClasses();
 			for (IClassCoverage className : classCollection) {
 				// System.out.println(className);
-				for (int i = className.getFirstLine(); i <= className
-						.getLastLine(); i++) {
-					// System.out.println(" Line Number = "+ Integer.valueOf(i)
-					// + " Status= " + className.getLine(i).getStatus());
+				for (int i = className.getFirstLine(); i <= className.getLastLine(); i++) {
 
 					final int status = className.getLine(i).getStatus();
 					// className.getLine(i).getStatus()
 					switch (status) {
 					case ICounter.NOT_COVERED:
-						// System.out.println("Not Covered" +" Class Name = "+
-						// className + " Line Number = "+ Integer.valueOf(i) + "
-						// Status= " + className.getLine(i).getStatus());
 						break;
 					case ICounter.PARTLY_COVERED:
-						resultList.add(
-								className.getName() + ":" + Integer.valueOf(i));
-						// System.out.println("Partially Covered" +" Class Name
-						// = "+ className + " Line Number = "+
-						// Integer.valueOf(i) + " Status= " +
-						// className.getLine(i).getStatus());
+						resultList.add(className.getName() + ":" + Integer.valueOf(i));
 						break;
 					case ICounter.FULLY_COVERED:
-
-						// className = className.replaceAll( "[CLASS]" , " ");
-						resultList.add(
-								className.getName() + ":" + Integer.valueOf(i));
-						// System.out.println("Fully Covered" +" Class Name = "+
-						// className + " Line Number = "+ Integer.valueOf(i) + "
-						// Status= " + className.getLine(i).getStatus());
+						resultList.add(className.getName() + ":" + Integer.valueOf(i));
 						break;
 					}
-
 				}
-
-				// Check the Enum Type( Covered, Not_Covered)
-				/*
-				 * Collection<IMethodCoverage> methodCol =
-				 * className.getMethods(); for(IMethodCoverage methodName:
-				 * methodCol){
-				 *
-				 * System.out.println(methodName); }
-				 */
-
 			}
 		}
 		System.out.println("List Size =" + resultList.size());
-		FileWriter writer = new FileWriter(title+"/output.csv");
+        
+		FileWriter writer = new FileWriter(destinationDirectory +"/output.csv");
 		String collect = resultList.stream().collect(Collectors.joining(","));
-		// System.out.println(collect);
-
 		writer.write(collect);
 		writer.close();
 
-		/*
-		 * BufferedWriter bf = null; try { FileWriter outputFile = new
-		 * FileWriter("Result.csv"); bf = new BufferedWriter(outputFile);
-		 *
-		 * for (Map.Entry<InterceptionPoint, InterceptionPoint > entry :
-		 * Utility.resultInterception.entrySet()){
-		 *
-		 * String conflictingPair = entry.getKey() + ":" + entry.getValue();
-		 * if(!conflictingListPair.contains(conflictingPair)) {
-		 * conflictingListPair.add(conflictingPair); bf.write(conflictingPair);
-		 * bf.newLine(); } } bf.flush(); } catch (IOException e) {
-		 * System.out.println("An error occurred."); e.printStackTrace(); }
-		 * finally { try { bf.close(); } catch (Exception e) { }
-		 * //System.out.println(Utility.resultInterception); }
-		 */
-
-		// System.out.println("Bundle P
-		// ="+bundleCoverage.getPackages().getClasses());
-		// System.out.println("Bundle Package
-		// ="+bundleCoverage.getPackages().getClasses());
 	}
 
 	private void createReport(final IBundleCoverage bundleCoverage)
@@ -227,11 +182,11 @@ public class ReportGenerator {
 	 * @throws IOException
 	 */
 	public static void main(final String[] args) throws IOException {
-		for (int i = 0; i < args.length; i++) {
+		
+        for (int i = 0; i < args.length; i++) {
 			System.out.println("HELLO SHANTO");
-			final ReportGenerator generator = new ReportGenerator(
-					new File(args[i]));
-
+			final ReportGenerator generator = new ReportGenerator(new File(args[i]));
+            
 			System.out.println(args[i]);
 			generator.create();
 		}
