@@ -17,7 +17,7 @@
     <groupId>org.jacoco</groupId>
     <artifactId>org.jacoco.build</artifactId>
     <version>0.8.8-SNAPSHOT</version>
-   <!--  <relativePath>../org.jacoco.build</relativePath> -->
+    <relativePath>../org.jacoco.build</relativePath>
   </parent>
 
   <artifactId>org.jacoco.extract_covered_line</artifactId>

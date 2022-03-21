@@ -105,9 +105,9 @@ public class ReportGenerator {
 			Collection<IClassCoverage> classCollection = packageName
 					.getClasses();
 			for (IClassCoverage className : classCollection) {
-				// System.out.println(className);
+				 //System.out.println(className.getName());
+				//String Str = new String("org/java_websocket/SocketChannelIOHelper");
 				for (int i = className.getFirstLine(); i <= className.getLastLine(); i++) {
-
 					final int status = className.getLine(i).getStatus();
 					// className.getLine(i).getStatus()
 					switch (status) {
