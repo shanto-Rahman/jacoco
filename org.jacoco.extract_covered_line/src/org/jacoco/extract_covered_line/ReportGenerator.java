@@ -32,6 +32,8 @@ import org.jacoco.core.analysis.IPackageCoverage;
 import org.jacoco.core.analysis.IClassCoverage;
 import org.jacoco.core.analysis.ICounter;
 import org.jacoco.core.analysis.IMethodCoverage;
+import java.io.FileReader;  
+import java.io.*;  
 
 /**
  * This example creates a HTML report for eclipse like projects based on a
@@ -46,7 +48,8 @@ public class ReportGenerator {
     private final String title;
     private String destinationDirectory;
     private final File executionDataFile;
-    private final File classesDirectory;
+    private final File targetDirectoryListFile;
+    //private final File classesDirectory;
 
     private ExecFileLoader execFileLoader;
 
@@ -55,13 +58,15 @@ public class ReportGenerator {
      *
      * @param projectDirectory
      */
-    public ReportGenerator(final File projectDirectory) {
+    public ReportGenerator(final File projectDirectory, final File targetClassListFile) {
         System.out.println( projectDirectory );
         //Paths path = Paths.get(projectDirectory).
         this.destinationDirectory = projectDirectory.getAbsolutePath();
         this.title = projectDirectory.getName();
         this.executionDataFile = new File(projectDirectory, "jacoco.exec");
-        this.classesDirectory = new File(projectDirectory, "classes");
+        this.targetDirectoryListFile = targetClassListFile;
+        //for(File classDir:list)  
+        //this.classesDirectory = new File(compiledClassDirectory, "classes");
     }
 
     /**
@@ -82,7 +87,6 @@ public class ReportGenerator {
         // more than one bundle you will need to add a grouping node to your
         // report
         final IBundleCoverage bundleCoverage = analyzeStructure();
-
         myReport(bundleCoverage);
     }
 
@@ -103,7 +107,7 @@ public class ReportGenerator {
                 //String Str = new String("org/java_websocket/SocketChannelIOHelper");
                 for (int i = className.getFirstLine(); i <= className.getLastLine(); i++) {
                     final int status = className.getLine(i).getStatus();
-                    // className.getLine(i).getStatus()
+    //assesDirectory = new File(compiledClassDirectory, "classes");               // className.getLine(i).getStatus()
                     switch (status) {
                     case ICounter.NOT_COVERED:
                         break;
@@ -136,7 +140,29 @@ public class ReportGenerator {
         final Analyzer analyzer = new Analyzer(
                 execFileLoader.getExecutionDataStore(), coverageBuilder);
 
-        analyzer.analyzeAll(classesDirectory);
+        //Loop over the this.targetDirectoryListFile
+          /*while ((st = br.readLine()) != null){
+                    System.out.println("Hello SHANTO ***************"+st);
+                    //targetClassFileListLocation.add(st);
+                    File compiledClassLocation = new File(st);
+                    //compiledClassFileList.add(compiledClassLocation); 
+                    final ReportGenerator generator = new ReportGenerator(jacocoExeLocation, compiledClassLocation);
+                    generator.create();
+
+                }*/
+
+
+        String st;
+        BufferedReader br = new BufferedReader(new FileReader(targetDirectoryListFile));
+        while ((st = br.readLine()) != null){
+            System.out.println("Hello SHANTO ***************"+st);
+            
+            File compiledClassLocation = new File(st);
+            
+            final File classesDirectory = new File( compiledClassLocation , "classes");
+
+            analyzer.analyzeAll(classesDirectory);
+        }
 
         return coverageBuilder.getBundle(title);
     }
@@ -150,14 +176,42 @@ public class ReportGenerator {
      * @throws IOException
      */
     public static void main(final String[] args) throws IOException {
-        
-        for (int i = 0; i < args.length; i++) {
-            System.out.println("HELLO SHANTO");
-            final ReportGenerator generator = new ReportGenerator(new File(args[i]));
-            
-            System.out.println(args[i]);
-            generator.create();
-        }
+    //final ReportGenerator generator; 
+        //for (int i = 0; i < args.length; i++) 
+        //{
+            /*if (i == 1){//the csv file containing with all the target classes
+     
+                BufferedReader br = new BufferedReader(new FileReader(new File(args[i])));
+                String st;
+                while ((st = br.readLine()) != null)
+                    System.out.println("Hello SHANTO ***************"+st);
+                    generator = new ReportGenerator(new File(st));
+                    generator.create();
+
+            }
+            if (i == 0){*/
+
+                File jacocoExeLocation = new File(args[0]);
+                //String targetClassFileName=args[1];
+                //List<String> targetClassFileListLocation = new ArrayList<String>();
+                //BufferedReader br = new BufferedReader(new FileReader(new File(args[1])));
+                File targetClassFileList = new File(args[1]);
+                //String st;
+                //List<File> compiledClassFileList = new ArrayList<File>();
+                /*while ((st = br.readLine()) != null){
+                    System.out.println("Hello SHANTO ***************"+st);
+                    //targetClassFileListLocation.add(st);
+                    File compiledClassLocation = new File(st);
+                    //compiledClassFileList.add(compiledClassLocation); 
+                    final ReportGenerator generator = new ReportGenerator(jacocoExeLocation, compiledClassLocation);
+                    generator.create();
+
+                }*/
+
+                final ReportGenerator generator = new ReportGenerator(jacocoExeLocation, targetClassFileList);
+                generator.create();
+           // }
+       // }
     }
 
 }
