@@ -59,14 +59,11 @@ public class ReportGenerator {
      * @param projectDirectory
      */
     public ReportGenerator(final File projectDirectory, final File targetClassListFile) {
-        System.out.println( projectDirectory );
         //Paths path = Paths.get(projectDirectory).
         this.destinationDirectory = projectDirectory.getAbsolutePath();
         this.title = projectDirectory.getName();
         this.executionDataFile = new File(projectDirectory, "jacoco.exec");
         this.targetDirectoryListFile = targetClassListFile;
-        //for(File classDir:list)  
-        //this.classesDirectory = new File(compiledClassDirectory, "classes");
     }
 
     /**
@@ -107,7 +104,6 @@ public class ReportGenerator {
                 //String Str = new String("org/java_websocket/SocketChannelIOHelper");
                 for (int i = className.getFirstLine(); i <= className.getLastLine(); i++) {
                     final int status = className.getLine(i).getStatus();
-    //assesDirectory = new File(compiledClassDirectory, "classes");               // className.getLine(i).getStatus()
                     switch (status) {
                     case ICounter.NOT_COVERED:
                         break;
@@ -141,16 +137,6 @@ public class ReportGenerator {
                 execFileLoader.getExecutionDataStore(), coverageBuilder);
 
         //Loop over the this.targetDirectoryListFile
-          /*while ((st = br.readLine()) != null){
-                    System.out.println("Hello SHANTO ***************"+st);
-                    //targetClassFileListLocation.add(st);
-                    File compiledClassLocation = new File(st);
-                    //compiledClassFileList.add(compiledClassLocation); 
-                    final ReportGenerator generator = new ReportGenerator(jacocoExeLocation, compiledClassLocation);
-                    generator.create();
-
-                }*/
-
 
         String st;
         BufferedReader br = new BufferedReader(new FileReader(targetDirectoryListFile));
@@ -176,38 +162,9 @@ public class ReportGenerator {
      * @throws IOException
      */
     public static void main(final String[] args) throws IOException {
-    //final ReportGenerator generator; 
-        //for (int i = 0; i < args.length; i++) 
-        //{
-            /*if (i == 1){//the csv file containing with all the target classes
-     
-                BufferedReader br = new BufferedReader(new FileReader(new File(args[i])));
-                String st;
-                while ((st = br.readLine()) != null)
-                    System.out.println("Hello SHANTO ***************"+st);
-                    generator = new ReportGenerator(new File(st));
-                    generator.create();
-
-            }
-            if (i == 0){*/
 
                 File jacocoExeLocation = new File(args[0]);
-                //String targetClassFileName=args[1];
-                //List<String> targetClassFileListLocation = new ArrayList<String>();
-                //BufferedReader br = new BufferedReader(new FileReader(new File(args[1])));
                 File targetClassFileList = new File(args[1]);
-                //String st;
-                //List<File> compiledClassFileList = new ArrayList<File>();
-                /*while ((st = br.readLine()) != null){
-                    System.out.println("Hello SHANTO ***************"+st);
-                    //targetClassFileListLocation.add(st);
-                    File compiledClassLocation = new File(st);
-                    //compiledClassFileList.add(compiledClassLocation); 
-                    final ReportGenerator generator = new ReportGenerator(jacocoExeLocation, compiledClassLocation);
-                    generator.create();
-
-                }*/
-
                 final ReportGenerator generator = new ReportGenerator(jacocoExeLocation, targetClassFileList);
                 generator.create();
            // }
