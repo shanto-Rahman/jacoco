@@ -108,10 +108,10 @@ public class ReportGenerator {
                     case ICounter.NOT_COVERED:
                         break;
                     case ICounter.PARTLY_COVERED:
-                        resultList.add(className.getName() + ":" + Integer.valueOf(i));
+                        resultList.add(className.getName() + ":-P:" + Integer.valueOf(i));
                         break;
                     case ICounter.FULLY_COVERED:
-                        resultList.add(className.getName() + ":" + Integer.valueOf(i));
+                        resultList.add(className.getName() + ":-F:" + Integer.valueOf(i));
                         break;
                     }
                 }
